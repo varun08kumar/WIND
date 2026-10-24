@@ -16,6 +16,7 @@ import { api, useResource } from "../api/client";
 import type { DailyAccuracy, LeadTimeBucket, Meta } from "../types/api";
 import { axisTick, useChartColors } from "../lib/chartTheme";
 import { fmtDay, fmtHours, fmtMw, fmtNum, fmtPct, fmtShortDay, fmtSignedMw, fmtSignedNum, fmtTimeZ } from "../lib/format";
+import { isIsoDate } from "../lib/urlState";
 import { StatCards } from "./StatCards";
 import { TimeSeriesChart } from "./TimeSeriesChart";
 import { Empty, ErrorState, Loading } from "./States";
@@ -81,6 +82,9 @@ export function AccuracySection({ meta, from, to, selectedDate, onRangeChange, o
   const min = meta.data_start_date;
   const max = meta.data_end_date;
   const isFullRange = from === min && to === max;
+  const isDefaultRange = from === meta.default_from && to === meta.default_to;
+  const showDefaultButton = meta.default_from !== min || meta.default_to !== max;
+  const inRange = (value: string) => isIsoDate(value) && value >= min && value <= max;
 
   const acData = acc.data;
   const decisionLead = acData?.decision_lead_time_hours;
@@ -102,7 +106,7 @@ export function AccuracySection({ meta, from, to, selectedDate, onRangeChange, o
             max={to}
             value={from}
             autoComplete="off"
-            onChange={(e) => e.target.value && onRangeChange(e.target.value, to < e.target.value ? e.target.value : to)}
+            onChange={(e) => inRange(e.target.value) && onRangeChange(e.target.value, to < e.target.value ? e.target.value : to)}
           />
         </label>
         <label className="field">
@@ -114,9 +118,14 @@ export function AccuracySection({ meta, from, to, selectedDate, onRangeChange, o
             max={max}
             value={to}
             autoComplete="off"
-            onChange={(e) => e.target.value && onRangeChange(from > e.target.value ? e.target.value : from, e.target.value)}
+            onChange={(e) => inRange(e.target.value) && e.target.value >= from && onRangeChange(from, e.target.value)}
           />
         </label>
+        {showDefaultButton && (
+          <button type="button" className="btn" onClick={() => onRangeChange(meta.default_from, meta.default_to)} disabled={isDefaultRange}>
+            Default ({fmtShortDay(meta.default_from)} – {fmtShortDay(meta.default_to)})
+          </button>
+        )}
         <button type="button" className="btn" onClick={() => onRangeChange(min, max)} disabled={isFullRange}>
           Full Period ({fmtShortDay(min)} – {fmtShortDay(max)})
         </button>
