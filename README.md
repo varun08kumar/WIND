@@ -52,7 +52,6 @@ Elexon API → Python ingestion & validation → PostgreSQL → FastAPI → Reac
 ├── api/index.py           Vercel serverless entrypoint (imports the FastAPI app)
 ├── vercel.json            Vercel build, function and routing config
 ├── requirements.txt       Python dependencies for Vercel (same pins as backend/requirements.txt)
-├── DEPLOY_VERCEL.md       Step-by-step Vercel + Neon deployment guide
 ├── Dockerfile             Single-container image for Heroku (API + built frontend)
 ├── heroku.yml             Heroku container-stack build definition
 ├── docker-compose.yml     db + backend + frontend (+ one-off ingest profile)
@@ -353,7 +352,7 @@ heroku open -a <app-name>
 
 ## Deploying to Vercel
 
-See **[DEPLOY_VERCEL.md](DEPLOY_VERCEL.md)** for the full step-by-step guide. In short:
+How the Vercel deployment works:
 
 - **Hosting:** Vercel serves the built React app as static files and runs FastAPI as one Python function
   (`api/index.py`). `vercel.json` routes `/api/*`, `/docs` and `/openapi.json` to the function, and everything else
