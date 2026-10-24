@@ -14,11 +14,6 @@ export function App() {
         <div className="container">
           <p className="eyebrow">Day-ahead procurement · GB national wind</p>
           <h1>Wind Forecast Decision Monitor</h1>
-          <p className="lede">
-            When you buy power for tomorrow, the shortfall left after wind has to be bought from the market. This monitor
-            shows the national wind forecast that was actually available at your decision time, and how far it has been
-            from real output.
-          </p>
           <ul className="facts">
             <li>All times UK local (GMT or BST, as labelled)</li>
             <li>Power in MW</li>

@@ -102,7 +102,6 @@ main:focus { outline: none; }
 
 .header { border-bottom: 1px solid var(--border); background: var(--surface); padding: 40px 0 28px; }
 .eyebrow { font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px; }
-.lede { max-width: 68ch; color: var(--text-secondary); margin-top: 10px; font-size: 1.02rem; }
 .facts { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 18px 0 0; }
 .facts li { font-size: 13px; color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; background: var(--surface-raised); }
 
