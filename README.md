@@ -414,5 +414,9 @@ to:
 - write the backend, frontend, tests, Docker configuration and this README;
 - run the tests and check the UI in a headless browser.
 
+I tested the application myself, locally and on the deployed site. I also deployed it: the GitHub repository,
+the Vercel project, the Neon database, the environment variables, and the GitHub Actions secret and live-ingestion
+workflow.
+
 Design decisions, assumptions and results are documented above so they can be reviewed independently. The author
 is responsible for reviewing and validating the submission.
