@@ -414,7 +414,9 @@ to:
 - write the backend, frontend, tests, Docker configuration and this README;
 - run the tests and check the UI in a headless browser.
 
-I tested the application myself, locally and on the deployed site. I also deployed it: the GitHub repository,
+I defined the requirements and the overall architecture: an Elexon client, idempotent ingestion into PostgreSQL,
+forecast selection and metrics, API routes, and a React dashboard. I tested the application myself, locally and on
+the deployed site. I also deployed it: the GitHub repository,
 the Vercel project, the Neon database, the environment variables, and the GitHub Actions secret and live-ingestion
 workflow.
 
