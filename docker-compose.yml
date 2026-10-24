@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-reint}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-reint}
+      POSTGRES_DB: ${POSTGRES_DB:-reint}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-reint} -d ${POSTGRES_DB:-reint}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-reint}:${POSTGRES_PASSWORD:-reint}@db:5432/${POSTGRES_DB:-reint}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  # One-off data load: docker compose --profile ingest run --rm ingest [--date 2026-01-15]
+  ingest:
+    build: ./backend
+    profiles: ["ingest"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-reint}:${POSTGRES_PASSWORD:-reint}@db:5432/${POSTGRES_DB:-reint}
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: ["python", "-m", "scripts.ingest_january_2026"]
+
+  # Live data: docker compose --profile live up -d  (also set LIVE_MODE=true for the backend)
+  ingest-live:
+    build: ./backend
+    profiles: ["live"]
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-reint}:${POSTGRES_PASSWORD:-reint}@db:5432/${POSTGRES_DB:-reint}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["python", "-m", "scripts.ingest_live", "--loop"]
+    restart: unless-stopped
+
+volumes:
+  pgdata:
