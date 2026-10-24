@@ -20,7 +20,7 @@ Your laptop ── python -m scripts.ingest_january_2026 ──► Neon PostgreS
 |---|---|
 | `vercel.json` | Builds the frontend; sends `/api/*`, `/docs` and `/openapi.json` to FastAPI and everything else to the React app |
 | `api/index.py` | The Vercel function. It imports the existing FastAPI app from `backend/app` |
-| `requirements.txt` | Tells Vercel which Python packages to install (it points at `backend/requirements.txt`) |
+| `requirements.txt` | Tells Vercel which Python packages to install. It is a copy of `backend/requirements.txt`, because Vercel can't follow `-r` includes, so keep the two in sync |
 | `.vercelignore` | Keeps local files (`.env`, `node_modules`, caches) out of the upload |
 
 The backend code is the same one used by Docker and Heroku. Vercel sets `VERCEL=1` automatically, and the app
@@ -188,7 +188,7 @@ Vercel redeploys automatically on every push to `main`.
 | `/api/health` shows `"database":"error"` | Database URL missing, wrong, or added after the last deploy | Check `DATABASE_URL_UNPOOLED` in Settings → Environment Variables, then **Redeploy** |
 | `/api/...` returns 404 | `vercel.json` not at the repo root, or Root Directory changed | Root Directory must be `./`; `vercel.json` must be in the repo root |
 | Function error `ModuleNotFoundError: No module named 'app'` | Backend files not bundled | Check `vercel.json` has `"includeFiles": "backend/app/**"`, and that `backend/app` is in the repo |
-| Function error `No module named 'fastapi'` | Vercel didn't follow the `-r` line in `requirements.txt` | Replace the contents of the root `requirements.txt` with the lines from `backend/requirements.txt`, then push |
+| Build error `PYTHON_REQUIREMENTS_PARSE_ERROR` | The root `requirements.txt` uses `-r` | Copy the lines of `backend/requirements.txt` into the root `requirements.txt`, then push |
 | Dashboard shows "No data stored for …" | Step 6 not done, or done against another database | Run the ingest command with the same URL Vercel uses |
 | Error mentioning `options` or `startup parameter` | Using Neon's **pooled** URL | Use the **unpooled/direct** URL as `DATABASE_URL_UNPOOLED` |
 | Build fails in `npm ci` | `frontend/package-lock.json` missing from the repo | Commit `frontend/package-lock.json` |

@@ -51,7 +51,7 @@ Elexon API → Python ingestion & validation → PostgreSQL → FastAPI → Reac
 │   └── Dockerfile
 ├── api/index.py           Vercel serverless entrypoint (imports the FastAPI app)
 ├── vercel.json            Vercel build, function and routing config
-├── requirements.txt       Python dependencies for Vercel (points at backend/requirements.txt)
+├── requirements.txt       Python dependencies for Vercel (same pins as backend/requirements.txt)
 ├── DEPLOY_VERCEL.md       Step-by-step Vercel + Neon deployment guide
 ├── Dockerfile             Single-container image for Heroku (API + built frontend)
 ├── heroku.yml             Heroku container-stack build definition
