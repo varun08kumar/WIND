@@ -16,9 +16,9 @@ export function Dashboard({ meta }: { meta: Meta }) {
   const [params, setParams] = useQueryParams();
   const min = meta.data_start_date;
   const max = meta.data_end_date;
-  const date = clampDate(params.get("date"), min, max, max);
-  const from = clampDate(params.get("from"), min, max, min);
-  const to = clampDate(params.get("to"), from, max, max);
+  const date = clampDate(params.get("date"), min, max, meta.default_to);
+  const from = clampDate(params.get("from"), min, max, meta.default_from);
+  const to = clampDate(params.get("to"), from, max, meta.default_to);
   const intervalParam = params.get("interval");
 
   const day = useResource(date, (s) => api.day(date, s));

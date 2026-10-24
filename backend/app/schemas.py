@@ -17,6 +17,9 @@ class MetaResponse(BaseModel):
     decision_rule: DecisionRule
     data_start_date: date
     data_end_date: date
+    default_from: date
+    default_to: date
+    live_mode: bool
     actual_resolution_minutes: int
     forecast_resolution_minutes: int
     sources: Dict[str, str]

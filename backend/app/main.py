@@ -141,10 +141,14 @@ def health(session: Session = Depends(get_session)):
 
 @app.get("/api/meta", response_model=schemas.MetaResponse)
 def meta(settings: Settings = Depends(get_settings)):
+    default_from, default_to = settings.default_range()
     return schemas.MetaResponse(
         decision_rule=decision_rule(settings),
         data_start_date=settings.data_start_date,
         data_end_date=settings.last_delivery_date(),
+        default_from=default_from,
+        default_to=default_to,
+        live_mode=settings.live_mode,
         actual_resolution_minutes=int(INTERVAL.total_seconds() // 60),
         forecast_resolution_minutes=int(FORECAST_RESOLUTION.total_seconds() // 60),
         sources={

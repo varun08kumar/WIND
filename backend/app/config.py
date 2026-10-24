@@ -2,7 +2,7 @@
 
 from datetime import date, datetime, time, timedelta
 from functools import lru_cache
-from typing import List
+from typing import List, Optional, Tuple
 from zoneinfo import ZoneInfo
 
 from pydantic import AliasChoices, Field, field_validator
@@ -30,6 +30,8 @@ class Settings(BaseSettings):
     data_start_date: date = date(2026, 1, 1)
     data_end_date: date = date(2026, 1, 31)
     live_mode: bool = False
+    default_start_date: Optional[date] = None
+    default_end_date: Optional[date] = None
 
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     frontend_dist_dir: str = ""
@@ -49,6 +51,13 @@ class Settings(BaseSettings):
             today = datetime.now(ZoneInfo(self.market_timezone)).date()
             return today + timedelta(days=self.decision_days_before)
         return self.data_end_date
+
+    def default_range(self) -> Tuple[date, date]:
+        """Dates the dashboard opens on: DEFAULT_START_DATE..DEFAULT_END_DATE, else the whole range."""
+        first, last = self.data_start_date, self.last_delivery_date()
+        start = min(max(self.default_start_date or first, first), last)
+        end = min(max(self.default_end_date or last, start), last)
+        return start, end
 
     @property
     def cors_origin_list(self) -> List[str]:

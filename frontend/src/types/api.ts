@@ -10,6 +10,9 @@ export interface Meta {
   decision_rule: DecisionRule;
   data_start_date: string;
   data_end_date: string;
+  default_from: string;
+  default_to: string;
+  live_mode: boolean;
   actual_resolution_minutes: number;
   forecast_resolution_minutes: number;
   sources: Record<string, string>;
